@@ -13,15 +13,15 @@ To change the resolution, change the width and height here in fractal.html
 ```
 
 ## Images
-#Mandelbrot
+### Mandelbrot
 ![Mandelbrot](Mandelbrot.png)
 
-#Julia Set
+### Julia Set
 ![Julia](Julia.png)
 
-#Dr. Brown's
+### Dr. Brown's
 
 ![Brown](Brown.png)
 
-##Instructions
+## Instructions
 Follow on-screen instructions to move around the fractal

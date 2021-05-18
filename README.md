@@ -7,4 +7,4 @@ This generator lets you zoom in and move around in the Mandelbrot, Julia, and Dr
 Clone the repo if you want to use this on your device.
 
 ## Images
-![Mandelbrot](/Picures/Mandelbrot.png)
+![Mandelbrot](Mandelbrot.png)

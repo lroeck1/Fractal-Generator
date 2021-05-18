@@ -69,20 +69,21 @@
             </div>
         </form>
         <div>
-            <p>Some cool (X, Y) pairs:
-            <ul>
-            <li>(-.7, .27015)</li>
-            <li>(-1.118, 0)</li>
-            <li>(-.4, .6)</li>
-            <li>(.285, 0)</li>
-            <li>(.285, .01)</li>
-            <li>(.45, .1428)</li>
-            <li>(-.70176, -.3842)</li>
-            <li>(-.835, -.2321)</li>
-            <li>(-.8, -.156)</li>
-            <li>(-.7269, .1889)</li>
-            <li>(0, -.8)</li>
-            </ul>
+            <p>
+                Some cool (X, Y) pairs:
+                <ul>
+                <li>(-.7, .27015)</li>
+                <li>(-1.118, 0)</li>
+                <li>(-.4, .6)</li>
+                <li>(.285, 0)</li>
+                <li>(.285, .01)</li>
+                <li>(.45, .1428)</li>
+                <li>(-.70176, -.3842)</li>
+                <li>(-.835, -.2321)</li>
+                <li>(-.8, -.156)</li>
+                <li>(-.7269, .1889)</li>
+                <li>(0, -.8)</li>
+                </ul>
             </p>
         </div>
         <div>
@@ -110,13 +111,14 @@
     </div>
 
     <script>
-        //sees what the user put in for the c value
+        //change cX and cY to user's values
+        //changes when you click submit
         document.getElementById("submitButton").onclick = function () {
-            cX = +document.getElementById("c_x-value").value;
-            cY = +document.getElementById("c_y-value").value;
-            displayData();
+            cX = +document.getElementById("c_x-value").value; // x value
+            cY = +document.getElementById("c_y-value").value; // y value
+            displayData(); // shows your coordinates
 
-            //reset textbox
+            //resets text box to have no values
             document.getElementById("c_x-value").value = '';
             document.getElementById("c_y-value").value = '';
 
@@ -129,6 +131,7 @@
             selectFractal();
         }
 
+        // makes the canvas full screen when user selects fullscreen
         document.getElementById("fullscreen").onclick = function () {
             openFullscreen();
         }

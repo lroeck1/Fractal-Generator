@@ -1,4 +1,3 @@
-
 function keyChange(xmin, xmax, ymin, ymax, mr0, mr1, mg0, mg1, mb0, mb1, cX, cY, fractal){
     DrawFractal(xmin, xmax, ymin, ymax, mr0, mr1, mg0, mg1, mb0, mb1, cX, cY, fractal);
     const resetXMin = xmin;
@@ -8,7 +7,6 @@ function keyChange(xmin, xmax, ymin, ymax, mr0, mr1, mg0, mg1, mb0, mb1, cX, cY,
     //when the user presses a key
     document.onkeypress = function(evt)
     {
-
         var charCode = evt.keyCode
         var charStr = String.fromCharCode(charCode);
         var p = 0.1; // 10 percent
@@ -83,9 +81,6 @@ function DrawFractal(xmin, xmax, ymin, ymax, mr0, mr1, mg0, mg1, mb0, mb1, cX, c
     var x = 0.0; var y = 0.0;
     var zx = 0.0; var zy = 0.0;
 
-    console.log(cX);
-    console.log(cY);
-
     for (var j = 0; j < height; j++)
     {
         y = ymin + (ymax - ymin) * j / height;
@@ -101,6 +96,9 @@ function DrawFractal(xmin, xmax, ymin, ymax, mr0, mr1, mg0, mg1, mb0, mb1, cX, c
             }
             else if (fractal === 'b'){
                  i = Brown(zx, zy, x, y, cX, cY, maxIterations);
+            }
+            else if (fractal === "i"){
+                i = Biomorph(zx, zy, x, y, cX, cY, maxIterations);
             }
             var pixel = (width * j + k) * 4; // by using the iterations we can change the colors
             pix[pixel] = i % mr0 * mr1;     // red
@@ -176,6 +174,25 @@ function Brown(zx, zy, x, y, cX, cY, maxIterations) {
             zy = yFirst + ySecond + yThird;
             zx = tmp;
         }
+    }
+    return i;
+}
+
+function Biomorph(zx, zy, x, y, cX, cY, maxIterations) {
+    let zx2 = 0;
+    let zy2 = 0;
+    let tmp = 0;
+    zx = x;
+    zy = y;
+    maxIterations = 10;
+    for (var i = 0; i < maxIterations; i++) {
+        // f(z) = z^2 + c where c is predefined; actual algorithm
+        zx2 = zx * zx;
+        zy2 = zy * zy;
+        if (zx2 + zy2 > 10.0) break;
+        tmp = (zx*zx*zx) - (3 * zx * zy * zy);
+        zy = (3 * zx * zx *zy) - (zy * zy * zy);
+        zx = tmp;
     }
     return i;
 }

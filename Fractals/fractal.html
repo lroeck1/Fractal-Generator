@@ -1,129 +1,137 @@
 <html>
 <head>
-    <title>Interactive Fractal Fractal Using HTML5 Canvas</title>
+    <title>Interactive Fractal Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="fractal.js"></script>
+    <script src="interact.js"></script>
 </head>
-<body>
 
-    <canvas id="canvas" width="512" height="512">
+<body>
+    <canvas id="canvas" width="680" height="680">
         Your browser does not support HTML5 Canvas.
     </canvas>
 
-    <form name="formId">
-        <select id="ddlselect">
-            <option>Select Fractal:</option>
-            <option value="Mandelbrot">Mandelbrot</option>
-            <option value="Julia">Julia</option>
-            <option value="DrBrown">DrBrown</option>
-        </select>
-        <label id="lblmessage"></label>
-    </form>
+    <div class="toptitle">
+        <h1>Interactive Fractal Generator</h1>
+    </div>
 
-    C_x value:
-    <input type="text" id="c_x-value">
-    C_y value:
-    <input type="text" id="c_y-value">
+    <div class ="welcome">
+        <h2>Welcome fractal lovers!</h2>
+        <p>
+            This interactive fractal generator will let you use the Mandelbrot,
+            Julia, and other fractals to your choosing. Select a fractal now using the
+            dropdown menu.
+        </p>
+        <p>
+            You can select constant c values for Julia sets and Dr. Brown's with the text box. Some cool values for
+            Julia Sets are given for you to try! The best values for Dr. Brown's fractal are all positive x values
+            and a y value of 0. The default value is (-.7, .27015).
+        </p>
+        <p>
+            Use the key values to zoom in and around the fractals with r to reset parameters.
+            To use full screen, try clicking the full screen button!
+        </p>
+    </div>
 
+    <div class="signature">
+        <p>A Lucas Roecker Production</p>
+    </div>
 
-    <button type="button" id="submitButton">
-        Submit
-    </button>
+    <div class="box">
+        <form name="formId">
+            <select id="ddlselect">
+                <option>Select Fractal:</option>
+                <option value="Mandelbrot">Mandelbrot</option>
+                <option value="Julia">Julia</option>
+                <option value="DrBrown">DrBrown</option>
+            </select>
+            <label id="lblmessage"></label>
+        </form>
 
-    <p>Some cool (C_x, C_y) pairs:
-        (-.7, .27015)
-        (-.4, .6)
-        (.285, 0)
-        (.285, .01)
-        (.45, .1428)
-    </p>
+        <div>
+            <p id="xoutput"></p>
+        </div>
+        <div>
+            <p id="youtput"></p>
+        </div>
+
+        <form id="cValue">
+            <div>
+                <label for="c_x-value"> X value: </label>
+                <input id="c_x-value" type="text">
+            </div>
+            <div>
+                <label for="c_y-value"> Y value: </label>
+                <input id="c_y-value" type="text">
+            </div>
+            <div>
+                <button type="button" id="submitButton">Submit</button>
+            </div>
+        </form>
+        <div>
+            <p>Some cool (X, Y) pairs:
+            <ul>
+            <li>(-.7, .27015)</li>
+            <li>(-1.118, 0)</li>
+            <li>(-.4, .6)</li>
+            <li>(.285, 0)</li>
+            <li>(.285, .01)</li>
+            <li>(.45, .1428)</li>
+            <li>(-.70176, -.3842)</li>
+            <li>(-.835, -.2321)</li>
+            <li>(-.8, -.156)</li>
+            <li>(-.7269, .1889)</li>
+            <li>(0, -.8)</li>
+            </ul>
+            </p>
+        </div>
+        <div>
+            <br>
+            <b>Keys:</b>
+            <br>
+            <b>z: zoom in</b>
+            <br>
+            <b>x: zoom out</b>
+            <br>
+            <b>a: move left</b>
+            <br>
+            <b>d: move right</b>
+            <br>
+            <b>w: move up</b>
+            <br>
+            <b>s: move down</b>
+            <br>
+            <b>r: reset</b>
+        </div>
+    </div>
+
+    <div class="fullscreenbutton">
+        <button type="button" id="fullscreen">FullScreen</button>
+    </div>
 
     <script>
-        let cX = -.7; let cY = .27015;
+        //sees what the user put in for the c value
+        document.getElementById("submitButton").onclick = function () {
+            cX = +document.getElementById("c_x-value").value;
+            cY = +document.getElementById("c_y-value").value;
+            displayData();
+
+            //reset textbox
+            document.getElementById("c_x-value").value = '';
+            document.getElementById("c_y-value").value = '';
+
+            //runs the fractal
+            selectFractal();
+        }
+
         // this only runs when the user changes the fractal
         document.getElementById("ddlselect").onchange = function () {
-                // these are for coloring the image
-                var mr0 = 0;
-                var mg0 = 0;
-                var mb0 = 0;
-                var xmin = 0;
-                var xmax = 0;
-                var ymin = 0;
-                var ymax = 0;
-                while (mr0 === mg0 || mr0 === mb0 || mg0 === mb0) {
-                    mr0 = Math.pow(2, Math.ceil(Math.random() * 3 + 3));
-                    mg0 = Math.pow(2, Math.ceil(Math.random() * 3 + 3));
-                    mb0 = Math.pow(2, Math.ceil(Math.random() * 3 + 3));
-                }
-                var mr1 = 256 / mr0;
-                var mg1 = 256 / mg0;
-                var mb1 = 256 / mb0;
+            selectFractal();
+        }
 
-                // sees what the user put for their fractal choice
-                var fractal = document.getElementById("ddlselect").value;
-                if (fractal === "Mandelbrot") {
-                    xmin = -2.0;
-                    xmax = 1.0;
-                    ymin = -1.5;
-                    ymax = 1.5;
-                    keyChange(xmin, xmax, ymin, ymax, mr0, mr1, mg0, mg1, mb0, mb1, cX, cY, 'm');
-                }
-                else {
-                    //sees what the user put in for the c value
-                    document.getElementById("submitButton").onclick = function () {
-                        cX = +document.getElementById("c_x-value").value;
-                        cY = +document.getElementById("c_y-value").value;
-                        console.log(cX);
-                        console.log(cY);
-                    }
-                    if (fractal === "Julia") {
-                        xmin = -2.0;
-                        xmax = 2.0;
-                        ymin = -1.5;
-                        ymax = 1.5;
-
-                        //const cX = -.7; const cY = .27015;
-                        //const goldenRatio = (1 + Math.sqrt(5)/2);
-                        //const cX = 1 - goldenRatio; const cY = 0;
-                        //const cX = -.4; const cY = .6;
-                        //const cX = .285; const cY = 0;
-                        //const cX = .285; const cY = .01;
-                        //const cX = .45; const cY = .1428;
-                        //const cX = -.70176; const cY = -.3842;
-                        //const cX = -.835; const cY = -.2321;
-                        //const cX = -.8; const cY -.156;
-                        //const cX = -.7269; const cY = .1889
-                        //const cX = 0; const cY = -.8;
-                        keyChange(xmin, xmax, ymin, ymax, mr0, mr1, mg0, mg1, mb0, mb1, cX, cY, 'j');
-                    } else if (fractal === "DrBrown") {
-                        xmin = -2.0;
-                        xmax = 2.0;
-                        ymin = -1.5;
-                        ymax = 1.5;
-                        console.log(cX);
-                        console.log(cY);
-                        keyChange(xmin, xmax, ymin, ymax, mr0, mr1, mg0, mg1, mb0, mb1, cX, cY, 'b');
-                    }
-                }
-            }
+        document.getElementById("fullscreen").onclick = function () {
+            openFullscreen();
+        }
     </script>
-
-    <br>
-    <b>Keys:</b>
-    <br>
-    <b>z: zoom in</b>
-    <br>
-    <b>x: zoom out</b>
-    <br>
-    <b>a: move left</b>
-    <br>
-    <b>d: move right</b>
-    <br>
-    <b>w: move up</b>
-    <br>
-    <b>s: move down</b>
-    <br>
-    <b>r: reset</b>
-
-    <script src="fractal.js"></script>
-
 </body>
 </html>
